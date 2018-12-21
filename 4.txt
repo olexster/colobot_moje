@@ -1,0 +1,9 @@
+extern void object::Poruszanie()
+{
+	point
+	object  item;
+	item = radar(Titanium);
+	if ( item == null )  return;
+	goto(item.position);
+	
+}

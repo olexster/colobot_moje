@@ -1,0 +1,14 @@
+extern void object::Tytan2()
+{
+	
+	object item;
+	item = radar(TitaniumOre);
+	goto(item.position);
+	grab();
+	item=radar(Converter);
+	goto(item.position);
+	drop();
+	motor(-1,-1);
+	wait(2);
+	
+}

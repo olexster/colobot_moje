@@ -1,0 +1,81 @@
+
+public class order
+{
+	int    m_type = nan;
+	float  m_param;
+}
+
+//Druga klasa exchange zawiera mechanizm przekazywania rozkazów. Deklarujemy jako static element klasy m_order, który będzie zawierał rozkaz do wykonania. Słowo static zapewnia, że element m_order będzie współużytkowany przez wszystkie instancje klasy exchange.
+
+public class exchange
+{
+	static private order m_order = new order;
+	
+	//Metoda put będzie używana przez robota nadrzędnego do przesyłania rozkazów. Jeśli zmienna m_order jest różna od nan, robot podległy nie zakończył wykonywania rozkazu a metoda put zwróci wartość false i niczego nie zrobi:
+	
+	synchronized bool put(order a)
+	{
+		if ( m_order.m_type == nan )
+		{
+			m_order = a;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	
+	//Kolejna metoda get będzie używana przez robota podległego do otrzymywania rozkazów. Metoda ta jako wynik zwraca rozkaz do wykonania:
+	
+	synchronized order get()
+	{
+		return m_order;
+	}
+	
+	//Trzecia metoda delete będzie używana przez robota podległego do zaznaczenia, że rozkaz został wykonany:
+	
+	synchronized void delete()
+	{
+		m_order.m_type = nan;
+	}
+}
+
+//Główny program robota podległego zawiera instancję klasy exchange nazwaną list. Po słowie list należy napisać nawiasy (), w celu utworzenia instancji klasy exchange.
+
+extern void object::Slave3( )
+{
+	exchange list();
+	order    todo;
+	
+	//Zewnętrzna pętla while działa w nieskończoność. Wewnętrzna pętla while czeka na rozkaz używając metody get z klasy exchange. Pętla zatrzymuje się gdy get zwróci wartość różną od nan.
+	
+	while ( true )
+	{
+		while ( true )
+		{
+			todo = list.get();
+			if ( todo.m_type != nan )  break;
+			wait(1);
+		}
+		
+		//Po otrzymaniu rozkazu i zapisaniu go w zmiennej todo wystarczy jedynie go wykonać:
+		
+		if ( todo.m_type == 1 )
+		{
+			move(todo.m_param);
+		}
+		else if ( todo.m_type == 2 )
+		{
+			turn(todo.m_param);
+		}
+		else
+		{
+			message("Nieznany rozkaz");
+		}
+		
+		//Po zakończeniu wykonywania rozkazu, należy wywołać metodę delete, aby powiadomić robota nadrzędnego, że może już przesłać następny rozkaz:
+		
+		list.delete();
+	}
+}

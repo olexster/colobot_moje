@@ -1,0 +1,31 @@
+//W robocie nadrzędnym należy napisać funkcję nazwaną SendOrder, która wyśle rozkaz do robota podległego:
+
+void object::SendOrder(float order, float param)
+{
+	exchange list();
+	order    todo();
+	
+	todo.m_type = order;
+	todo.m_param = param;
+	
+	while ( list.put(todo) == false )
+	{
+		wait(1);
+	}
+}
+
+//Pętla while czeka na zakończenie oczekującego rozkazu, czyli na wyjście przez robota podległego z metody get i wywołanie metody delete.
+//Główny program robota nadrzędnego jest bardzo prosty:
+
+extern void object::Remote4( )
+{
+	SendOrder(1, 20);  // move(20);
+	SendOrder(2, 90);  // turn(90);
+	SendOrder(1, 20);  // move(20);
+	SendOrder(2, 90);  // turn(90);
+	SendOrder(1, 10);  // move(10);
+	SendOrder(2, 90);  // turn(90);
+	SendOrder(1, 10);  // move(10);
+	SendOrder(2,-90);  // turn(-90);
+	SendOrder(1, 10);  // move(10);
+}

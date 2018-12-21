@@ -1,0 +1,61 @@
+extern void object::Nowy()
+{
+	point start;
+	start = position;
+	grab();
+	turn(90);
+	move(5) ;
+	drop();
+	build(Converter);
+	tytan();
+	turn(180);
+	move(10);
+	drop();
+	build(PowerPlant);
+	move(-5);
+	bateria();
+	
+}
+void bateria()
+{
+	object item; 
+	
+	tytan();
+	item=radar(PowerPlant);
+	goto(item.position);
+	drop();
+	move(-2.5);
+	while(radar( PowerCell)==null)
+	{
+		wait(1);
+	}
+	move(2.5);
+	grab();
+	move(2.5);
+}
+void tytan()
+{
+	object item; 
+	item=radar(Derrick);
+	while(radar( TitaniumOre)==null)
+	{
+		wait(1);
+	}
+	message("znalazlem rude");
+	goto(item.position);
+	message("jade po rude");
+	grab();
+	
+	item=radar(Converter);
+	goto(item.position);
+	drop();
+	move(-2.5);
+	while(radar( Titanium)==null)
+	{
+		wait(1);
+	}
+	move(2.5);
+	grab();
+	move(-2.5);
+	message("mam Tytan");
+}

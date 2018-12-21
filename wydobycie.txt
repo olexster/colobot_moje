@@ -1,0 +1,32 @@
+extern void object::Poruszanie()
+{
+	object obj;
+	point dest;
+	for(int i=0;i<2;i++)
+	{
+		do
+		{
+			obj = radar(TitaniumOre);
+		}
+		while ( obj == null );
+		goto(obj.position);
+		grab();
+		obj = radar(Converter);
+		goto(obj.position);
+		drop();
+		move(-2.5);
+		do
+		{
+			obj = radar(Titanium, 0, 360, 0, 5);
+		}
+		while ( obj == null );
+		move(2.5);
+		grab();
+		dest.x = 10;
+		dest.y = -60-5*i;
+		goto(dest);
+		drop();
+		
+	}
+	
+}

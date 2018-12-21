@@ -1,0 +1,59 @@
+public class exchange
+{
+	static private string m_order = "";
+
+//Metoda put będzie używana przez robota nadrzędnego do przesyłania rozkazów. Jeśli łańcuch m_order nie jest pusty, robot podległy nie zakończył wykonywania rozkazu a metoda put zwróci wartość false i niczego nie zrobi.
+
+	synchronized bool put(string order)
+	{
+		if ( m_order == "" )
+		{
+			m_order = order;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+//Inna metoda get zostanie użyta przez robota podległego do pobrania rozkazów. Metoda ta zwraca łańcuch zawarty w zmiennej m_order i opróżnia ją, aby mógł być przyjęty nowy rozkaz:
+
+	synchronized string get()
+	{
+		string ret = m_order;
+		m_order = "";
+		return ret;
+	}
+}
+
+//Główny program niewolnika zawiera instancję klasy exchange nazwaną list.
+
+extern void object::Slave3( )
+{
+	exchange list();
+	string   todo;
+
+//Zewnętrzna pętla while działa w nieskończoność. Wewnętrzna pętla while czeka na rozkaz używając metody get z klasy exchange. Pętla zatrzymuje się gdy metoda get zwróci pusty łańcuch.
+
+	while ( true )
+	{
+		while ( true )
+		{
+			todo = list.get();
+			if ( todo != "" )  break;
+			wait(1);
+		}
+
+//Po otrzymaniu rozkazu i zapisaniu go w zmiennej todo wystarczy jedynie go wykonać:
+
+		if ( strfind(todo, "move") == 0 )
+		{
+			move(strval(strmid(todo,5)));
+		}
+		if ( strfind(todo, "turn") == 0 )
+		{
+			turn(strval(strmid(todo,5)));
+		}
+	}
+}

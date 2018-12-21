@@ -1,0 +1,20 @@
+extern void object::Znajdź()
+{
+	object spot;
+	float dir, moc;
+	while ( true )
+	{
+		
+		spot = radar(WayPoint);
+		if ( spot == null )  // nie ma więcej?
+		{
+			motor(0, 0);  // zatrzymaj silniki
+			break;        // zatrzymaj pętlę
+		}
+		dir = direction(spot.position);
+		moc = dir/90;
+		motor(1-moc,1+moc);
+	}
+	
+	
+}

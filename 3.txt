@@ -1,0 +1,26 @@
+extern void object::Example( )
+{
+	object spot;
+	float dir;
+	while ( true )
+	{
+		
+		
+		spot = radar(WayPoint);
+		if ( spot == null )  // no more ?
+		{
+			motor(0, 0);  // stops
+			break;
+		}
+		
+		dir = direction(spot.position);
+		if ( dir < 0 )  // on the right ?
+		{
+			motor(1, 1+dir/90);
+		}
+		else  // on the left ?
+		{
+			motor(1-dir/90, 1);
+		}
+	}
+}

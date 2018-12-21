@@ -1,0 +1,15 @@
+extern void object::atak()
+{
+	object    item;
+	
+	while(true)
+	{
+		while (radar(AlienSpider, 0, 360, 0, 40) == null)
+		{
+			wait(0.2);
+		}
+		item = radar(AlienSpider);
+		turn(direction(item.position));
+		fire(1);
+	}
+}

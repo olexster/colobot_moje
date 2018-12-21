@@ -1,0 +1,17 @@
+extern void object::ogniwo()
+{
+	while(true){
+		
+		
+		object poz;
+		poz=radar(RedFlag);
+		goto(poz.position);
+		poz=radar(PowerCell);
+		goto(poz.position);
+		grab();
+		poz=radar(YellowFlag);
+		goto(poz.position);
+		drop();
+		
+	}
+}

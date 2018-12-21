@@ -1,0 +1,8 @@
+extern void object::Nowy()
+{
+	object poz;
+	poz=radar(SpaceShip);
+	goto(poz.position);
+	
+	
+}

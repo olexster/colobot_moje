@@ -1,0 +1,12 @@
+extern void object::atak()
+{
+	object    item;
+	while(true)
+	{
+		item = radar(AlienAnt);
+		turn(direction(item.position));
+		move(distance(position, item.position)-40);
+		aim(direction(item.position));
+		fire(1);
+	}
+}

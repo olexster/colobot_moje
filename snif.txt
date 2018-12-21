@@ -1,0 +1,55 @@
+extern void object::przeszukaj()
+{
+	
+	object    item;
+	while (true)
+	{
+		if(energyCell.energyLevel < 0.5)
+		{
+			point  start;          // variable for initial pos.
+			object item;           // info. about power station
+			
+			start = position;      // store initial position
+			
+			item = radar(PowerStation); // look for station
+			goto(item.position);   // go to the power station
+			
+			while ( energyCell.energyLevel < 1 )
+			{
+				wait(1);            // wait until recharged
+			}
+			
+			goto(start);           // go back to initial pos.
+			message("Recharge completed");
+		}
+		if(temperature > 0.6)
+		{
+			point  start;          // variable for initial pos.
+			object item;           // info. about power station
+			
+			start = position;      // store initial position
+			
+			item = radar(PowerStation); // look for station
+			goto(item.position);   // go to the power station
+			
+			while (temperature > 0.1 )
+			{
+				wait(1);            // wait until recharged
+			}
+			
+			goto(start);           // go back to initial pos.
+			message("Recharge completed");
+		}
+		
+		for(int i=0; i<10;i++)
+		{
+			sniff ( );
+			if (topo(position) < 0)
+			{
+				continue;
+			}
+			move(5);
+		}
+		
+	}
+}

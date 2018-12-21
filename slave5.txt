@@ -1,0 +1,70 @@
+//Najpierw musimy zrozumieć jak działa program robota podległego. Klasa order zawiera dwa elementy: m_type jest rozkazem do wykonania (move lub turn), a m_param jest odległością do pokonania lub kątem obrotu:
+
+public class order
+{
+	int    m_type;
+	float  m_param;
+}
+
+//Druga klasa exchange zawiera mechanizm przekazywania rozkazów. Deklarujemy jako static element klasy m_fifo, który będzie zawierał listę rozkazów do wykonania. Słowo static zapewnia, że element m_fifo jest współużytkowany przez wszystkie instancje klasy exchange.
+
+
+static private order m_fifo[] = null;
+
+//Metoda put będzie używana przez robota nadrzędnego do przesyłania rozkazów. Rozkaz będzie dodawany na końcu tablicy m_fifo:
+
+synchronized void put(order a)
+{
+	m_fifo[sizeof(m_fifo)] = a;
+}
+
+//Kolejna metoda get będzie używana przez robota podległego do otrzymywania rozkazów. Metoda ta jako wynik zwraca rozkaz do wykonania. Jeśli lista jest pusta, zostanie zwrócona wartość null i robot powinien czekać na więcej rozkazów. W przeciwnym przypadku powinien zostać zwrócony pierwszy rozkaz na liście, a pozostałe muszą zostać "przesunięte". Ponieważ tablica nie może być "skrócona", używamy pomocniczej tablicy copy:
+
+synchronized order get()
+{
+	if ( sizeof(m_fifo) == 0 )  return null;
+	
+	order a = m_fifo[0];
+	order copy[] = null;
+	for ( int i=1 ; i<sizeof(m_fifo) ; i++ )
+	{
+		copy[i-1] = m_fifo[i];
+	}
+	m_fifo = copy;
+	return a;
+}
+
+//Główny program robota podległego zawiera instancję klasy exchange nazwaną list. Po słowie list należy napisać nawiasy (), w celu utworzenia instancji klasy exchange.
+
+extern void object::Slave5( )
+{
+	exchange list();
+	order    todo;
+	
+	//Zewnętrzna pętla while działa w nieskończoność. Wewnętrzna pętla while czeka na rozkaz używając metody get z klasy exchange. Pętla zatrzymuje się gdy metoda get zwróci wartość różną od null.
+	
+	while ( true )
+	{
+		while ( true )
+		{
+			todo = list.get();
+			if ( todo != null )  break;
+			wait(1);
+		}
+		
+		//Po otrzymaniu rozkazu w zmiennej todo wystarczy tylko go wykonać:
+		
+		if ( todo.m_type == 1 )
+		{
+			move(todo.m_param);
+		}
+		else if ( todo.m_type == 2 )
+		{
+			turn(todo.m_param);
+		}
+		else
+		{
+			message("Nieznany rozkaz");
+		}
+	}
+}

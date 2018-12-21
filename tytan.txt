@@ -1,0 +1,11 @@
+extern void object::tytan()
+{
+	object poz;
+	poz=radar(Titanium);
+	goto(poz.position);
+	grab();
+	poz=radar(ResearchCenter);
+	goto(poz.position);
+	drop();
+	
+}
