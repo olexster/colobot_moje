@@ -1,8 +1,6 @@
-extern void object::Nowy()
+extern void object::do_rakiety()
 {
 	object poz;
 	poz=radar(SpaceShip);
 	goto(poz.position);
-	
-	
 }
