@@ -1,7 +1,0 @@
-extern void object::Poruszanie()
-{
-	
-	
-	
-}
-void object::Kwadrat()

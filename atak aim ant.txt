@@ -17,7 +17,7 @@ extern void object::atak()
 			turn(direction(item.position));
 			dz=item.position.z-position.z;
 			dist=distance2d(item.position,position);
-			aim(atan(dz/dist),direction(item.position));
+			aim(atan(dz/dist)));
 			fire(1);
 		}
 		point  start;          // variable for initial pos.

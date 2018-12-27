@@ -9,11 +9,6 @@ extern void object::nalot()
 	{
 		while (radar(AlienAnt, 0, 360, 0, 40) == null)
 		{
-			while(radar(AlienAnt)==null)
-			{
-				wait(0.2);
-				bot(this);
-			}
 			if (position.z-topo(position) < 2)
 			{
 				jet(1);
@@ -31,18 +26,17 @@ extern void object::nalot()
 			wait(0.2);
 			bot(this);
 		}
+		bot(this);
 		item = radar(AlienAnt);
 		turn(direction(item.position));
 		dz=item.position.z-position.z;
 		dist=distance2d(item.position,position);
 		aim(atan(dz/dist),direction(item.position));
-		
 		jet(0);
-		bot(this);
 		fire(1);
 	}
 }
-void bot(object bot)
+void bot(object bot)// użycie funkcji bot(this);
 {
 	if(bot.energyCell.energyLevel < 0.5)
 	{
