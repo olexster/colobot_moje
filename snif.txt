@@ -2,46 +2,10 @@ extern void object::przeszukaj()
 {
 	
 	object    item;
-	while (true)
+	float zwrot;
+	for(int i=0; i<5;i++)
 	{
-		if(energyCell.energyLevel < 0.5)
-		{
-			point  start;          // variable for initial pos.
-			object item;           // info. about power station
-			
-			start = position;      // store initial position
-			
-			item = radar(PowerStation); // look for station
-			goto(item.position);   // go to the power station
-			
-			while ( energyCell.energyLevel < 1 )
-			{
-				wait(1);            // wait until recharged
-			}
-			
-			goto(start);           // go back to initial pos.
-			message("Recharge completed");
-		}
-		if(temperature > 0.6)
-		{
-			point  start;          // variable for initial pos.
-			object item;           // info. about power station
-			
-			start = position;      // store initial position
-			
-			item = radar(PowerStation); // look for station
-			goto(item.position);   // go to the power station
-			
-			while (temperature > 0.1 )
-			{
-				wait(1);            // wait until recharged
-			}
-			
-			goto(start);           // go back to initial pos.
-			message("Recharge completed");
-		}
-		
-		for(int i=0; i<10;i++)
+		for(int j=0; j<5;j++)
 		{
 			sniff ( );
 			if (topo(position) < 0)
@@ -49,7 +13,52 @@ extern void object::przeszukaj()
 				continue;
 			}
 			move(5);
+			bot(this);
+		}
+		if( i%2==0)
+		{
+			zwrot=90;
+		}
+		else
+		{
+			zwrot=-90;
+		}
+		turn (zwrot);
+		move(5);
+		turn(zwrot);
+	}
+}
+void bot(object bot)// użycie funkcji bot(this);
+{
+	if(bot.energyCell.energyLevel < 0.5)
+	{
+		point  start;          // variable for initial pos.
+		object item;           // info. about power station
+		
+		start = bot.position;      // store initial position
+		
+		item = radar(PowerStation); // look for station
+		goto(item.position);   // go to the power station
+		
+		while ( bot.energyCell.energyLevel < 1 )
+		{
+			wait(1);            // wait until recharged
 		}
 		
+		goto(start);           // go back to initial pos.
+		message("Recharge completed");
+	}
+	if(bot.temperature > 0.6)
+	{
+		while (topo(bot.position) < 1)
+		{
+			motor(1,1);
+			wait(0.5);
+		}  
+		jet(-0.2);
+		while (bot.temperature > 0.1 )
+		{
+			wait(1);            // wait until recharged
+		}
 	}
 }
