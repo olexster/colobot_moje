@@ -1,18 +1,23 @@
 extern void object::atak()
 {
 	object    item;
-	float dist,dz;
+	float dist,dz,moc;
 	while(true){
 		while(energyCell.energyLevel > 0.3)
 		{
-			while(radar(AlienAnt,0,360,0,40)==null){
+			while(radar(AlienAnt,0,360,0,40)==null)
+			{
+				item = radar(AlienAnt);
+				turn(direction(item.position));
+				moc=distance2d(item.position,position)/40;
+				motor(moc,moc);
 				wait(0.2);
 			}
 			item = radar(AlienAnt);
 			turn(direction(item.position));
 			dz=item.position.z-position.z;
 			dist=distance2d(item.position,position);
-			aim(atan(dz/dist));
+			aim(atan(dz/dist),direction(item.position));
 			fire(1);
 		}
 		point  start;          // variable for initial pos.

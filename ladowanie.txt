@@ -1,4 +1,4 @@
-extern void object::Recharge2()
+extern void object::Rech_bat()
 {
 	point  start;          // variable for initial pos.
 	object item;           // info. about power station
@@ -12,7 +12,13 @@ extern void object::Recharge2()
 	{
 		wait(1);            // wait until recharged
 	}
-	
+	if(load.energyLevel < 1)
+	{
+		while ( load.energyLevel < 1 )
+		{
+			wait(1); 
+		}
+	}
 	goto(start);           // go back to initial pos.
 	message("Recharge completed");
 }
