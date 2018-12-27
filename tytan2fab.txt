@@ -1,11 +1,30 @@
 extern void object::tytan()
 {
-	object poz;
-	poz=radar(Titanium);
-	goto(poz.position);
+	object obj;
+	point dest;
+	
+	do
+	{
+		obj = radar(TitaniumOre);
+		wait(1);
+	}
+	while ( obj == null );
+	goto(obj.position);
 	grab();
-	poz=radar(BotFactory);
-	goto(poz.position);
+	obj = radar(Converter);
+	goto(obj.position);
+	drop();
+	move(-2.5);
+	do
+	{
+		obj = radar(Titanium, 0, 360, 0, 5);
+		wait(1);
+	}
+	while ( obj == null );
+	move(2.5);
+	grab();
+	obj = radar(BotFactory);
+	goto(obj.position);
 	drop();
 	move(-2.5);
 }
