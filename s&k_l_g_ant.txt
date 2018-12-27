@@ -1,0 +1,78 @@
+extern void object::nalot()
+{
+	object    item;
+	float dz, dist,moc;
+	point start;
+	start = position;  
+	jet(0.2);
+	while (true)
+	{
+		while (radar(AlienAnt, 0, 360, 0, 40) == null)
+		{
+			while(radar(AlienAnt)==null)
+			{
+				wait(0.2);
+				bot(this);
+			}
+			if (position.z-topo(position) < 2)
+			{
+				jet(1);
+			}
+			if (position.z-topo(position) < 9)
+			{
+				if( topo(position) > 0)
+				{
+					jet(-0.2);
+				}
+			}
+			item = radar(AlienAnt);
+			moc=distance2d(item.position,position)/40;
+			motor(moc,moc);
+			wait(0.2);
+			bot(this);
+		}
+		item = radar(AlienAnt);
+		turn(direction(item.position));
+		dz=item.position.z-position.z;
+		dist=distance2d(item.position,position);
+		aim(atan(dz/dist),direction(item.position));
+		
+		jet(0);
+		bot(this);
+		fire(1);
+	}
+}
+void bot(object bot)
+{
+	if(bot.energyCell.energyLevel < 0.5)
+	{
+		point  start;          // variable for initial pos.
+		object item;           // info. about power station
+		
+		start = bot.position;      // store initial position
+		
+		item = radar(PowerStation); // look for station
+		goto(item.position);   // go to the power station
+		
+		while ( bot.energyCell.energyLevel < 1 )
+		{
+			wait(1);            // wait until recharged
+		}
+		
+		goto(start);           // go back to initial pos.
+		message("Recharge completed");
+	}
+	if(bot.temperature > 0.6)
+	{
+		while (topo(bot.position) < 1)
+		{
+			motor(1,1);
+			wait(0.5);
+		}  
+		jet(-0.2);
+		while (bot.temperature > 0.1 )
+		{
+			wait(1);            // wait until recharged
+		}
+	}
+}

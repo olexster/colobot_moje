@@ -1,0 +1,5 @@
+extern void object::do_mnie()
+{
+	object ja = radar(Me)
+	goto(ja.position);
+}
