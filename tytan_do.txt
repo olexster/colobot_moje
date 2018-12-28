@@ -1,0 +1,15 @@
+extern void object::Tytan2elek()
+{
+	point start;
+	object item;
+	start=position;
+	item = radar(Titanium);
+	goto(item.position);
+	grab();
+	item = radar(PowerPlant);
+	goto(item.position);
+	drop();
+	move(-2.5);
+	//wait(2);
+	
+}
