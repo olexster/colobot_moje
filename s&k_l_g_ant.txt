@@ -4,27 +4,22 @@ extern void object::nalot()
 	float dz, dist,moc;
 	point start;
 	start = position;  
-	jet(0.2);
+	jet(1);
+	wait(2);
 	while (true)
 	{
 		while (radar(AlienAnt, 0, 360, 0, 40) == null)
 		{
-			if (position.z-topo(position) < 2)
-			{
-				jet(1);
-			}
-			if (position.z-topo(position) < 9)
-			{
-				if( topo(position) > 0)
-				{
-					jet(-0.2);
-				}
-			}
-			item = radar(AlienAnt);
-			moc=distance2d(item.position,position)/40;
-			motor(moc,moc);
-			wait(0.2);
 			bot(this);
+			
+			item = radar(AlienAnt);
+			lot(this,item);
+			//turn(direction(item.position));
+			//move(distance2d(item.position,position)-40);
+			//moc=distance2d(item.position,position)/40;
+			//motor(moc,moc);
+			wait(1);
+			
 		}
 		bot(this);
 		item = radar(AlienAnt);
@@ -36,8 +31,53 @@ extern void object::nalot()
 		fire(1);
 	}
 }
+void lot (object bot,object cel)
+{
+	float moc;
+	//turn(direction(cel.position));
+	do
+	{
+		do
+		{
+			dir = direction(cel.position);
+			if ( dir < 0 )  // on the right ?
+			{
+				motor(1, 1+dir/90);
+			}
+			else  // on the left ?
+			{
+				motor(1-dir/90, 1);
+			}
+		}
+		while(dir!=0);
+		moc=distance2d(cel.position,bot.position)/40;
+		motor(moc,moc);
+		if (bot.position.z-topo(bot.position) < 2)
+		{
+			jet(1);
+		}
+		if (bot.position.z-topo(bot.position) > 9)
+		{
+			if( topo(bot.position) > 0)
+			{
+				jet(-0.5);
+			}
+		}
+	} 
+	while((distance2d(cel.position,bot.position)>40));
+}
 void bot(object bot)// użycie funkcji bot(this);
 {
+	object item;
+	if(bot.shieldLevel<0.5)
+	{
+		item=radar(RepairCenter);
+		goto(item.position);
+		while ( bot.shieldLevel < 1 )
+		{
+			wait(1);            // wait until recharged
+		}
+	}
 	if(bot.energyCell.energyLevel < 0.5)
 	{
 		point  start;          // variable for initial pos.
