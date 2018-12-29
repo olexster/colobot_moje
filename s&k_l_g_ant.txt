@@ -1,19 +1,19 @@
 extern void object::nalot()
 {
-	object    item;
-	float dz, dist,moc;
+	object  item;
+	float dz, dist,moc, celowa=20;
 	point start;
 	start = position;  
-	jet(1);
-	wait(2);
+	wys_lot(this,5, 9);
+	
 	while (true)
 	{
-		while (radar(AlienAnt, 0, 360, 0, 40) == null)
+		while (radar(AlienAnt, 0, 360, 0, celowa) == null)
 		{
 			bot(this);
 			
 			item = radar(AlienAnt);
-			lot(this,item);
+			lot(this,item,celowa);
 			//turn(direction(item.position));
 			//move(distance2d(item.position,position)-40);
 			//moc=distance2d(item.position,position)/40;
@@ -22,50 +22,46 @@ extern void object::nalot()
 			
 		}
 		bot(this);
+		motor(0,0);
 		item = radar(AlienAnt);
 		turn(direction(item.position));
-		dz=item.position.z-position.z;
+		dz=item.position.z-position.z-2;
 		dist=distance2d(item.position,position);
-		aim(atan(dz/dist),direction(item.position));
-		jet(0);
-		fire(1);
+		item = radar(AlienAnt);
+		if(aim(atan(dz/dist),direction(item.position))==0)
+		{
+			fire(1);
+		}
+		else
+		{
+			move(-20);
+			wys_lot(this,5, 9);
+			wait(1);
+		}
 	}
 }
-void lot (object bot,object cel)
+void lot (object bot,object cel,float celowa)
 {
-	float moc;
+	float moc,dir,dist;
 	//turn(direction(cel.position));
-	do
+	
+	dir = direction(cel.position);
+	if ( dir < 0 )  // on the right ?
 	{
-		do
-		{
-			dir = direction(cel.position);
-			if ( dir < 0 )  // on the right ?
-			{
-				motor(1, 1+dir/90);
-			}
-			else  // on the left ?
-			{
-				motor(1-dir/90, 1);
-			}
-		}
-		while(dir!=0);
-		moc=distance2d(cel.position,bot.position)/40;
+		motor(1, 1+dir/90);
+	}
+	else  // on the left ?
+	{
+		motor(1-dir/90, 1);
+	}
+	if ( dir == 0 )  // on the right ?
+	{
+		moc=(distance2d(cel.position,bot.position)-celowa)/2;
 		motor(moc,moc);
-		if (bot.position.z-topo(bot.position) < 2)
-		{
-			jet(1);
-		}
-		if (bot.position.z-topo(bot.position) > 9)
-		{
-			if( topo(bot.position) > 0)
-			{
-				jet(-0.5);
-			}
-		}
-	} 
-	while((distance2d(cel.position,bot.position)>40));
+		wys_lot(bot,5, 9);
+	}
 }
+
 void bot(object bot)// użycie funkcji bot(this);
 {
 	object item;
@@ -82,31 +78,50 @@ void bot(object bot)// użycie funkcji bot(this);
 	{
 		point  start;          // variable for initial pos.
 		object item;           // info. about power station
-		
-		start = bot.position;      // store initial position
-		
-		item = radar(PowerStation); // look for station
-		goto(item.position);   // go to the power station
-		
-		while ( bot.energyCell.energyLevel < 1 )
+		      // store initial position
+		if(radar(PowerStation)!=null)
 		{
-			wait(1);            // wait until recharged
+			item = radar(PowerStation); // look for station
+			goto(item.position);   // go to the power station
+			
+			while ( bot.energyCell.energyLevel < 1 )
+			{
+				wait(1);            // wait until recharged
+			}
+		}
+		else
+		{
+			item = radar(BlueFlag); // look for station
+			goto(item.position);
 		}
 		
-		goto(start);           // go back to initial pos.
+		//goto(start);           // go back to initial pos.
 		message("Recharge completed");
 	}
 	if(bot.temperature > 0.6)
 	{
 		while (topo(bot.position) < 1)
 		{
-			motor(1,1);
+			motor(-1,-1);
 			wait(0.5);
 		}  
-		jet(-0.2);
+		jet(-0.5);
 		while (bot.temperature > 0.1 )
 		{
 			wait(1);            // wait until recharged
 		}
 	}
+}
+void wys_lot(object bot,float min,float max)
+{
+	if (bot.position.z-topo(bot.position) < min)
+	{
+		jet(0.5);
+	}
+	if (bot.position.z-topo(bot.position) > max)
+	{
+		jet(-0.5);
+	}
+	wait(1);
+	jet(0);
 }
